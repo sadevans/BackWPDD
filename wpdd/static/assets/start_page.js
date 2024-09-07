@@ -36,6 +36,8 @@ document.getElementById('start-button').addEventListener('click', function() {
         if (data.type === 'image_batch' && data.images){
             console.log('here');
             addPhotosToGrid(data.images);
+            console.log('here');
+
         }
         // if (data.type === 'image_batch' && data.images) {
         //     // Добавление нескольких фото в сетку
@@ -64,78 +66,104 @@ document.getElementById('start-button').addEventListener('click', function() {
 
 
 // Функция для динамического добавления фотографий в сетку
+// function addPhotosToGrid(images) {
+//     console.log('HERE')
+//     document.getElementById('inImageContainer').style.display = 'block';
+
+//     const gridContainer = document.getElementById('photo-grid');
+//     gridContainer.innerHTML = ''; // Clear the grid for new images
+//     gridContainer.style.display = 'grid';
+
+//     console.log('Images to render:', images.length);
+
+//     images.slice(0, 5).forEach((image, index) => {
+//         console.log(`Adding image ${index + 1}`);
+
+//         let gridItem = document.createElement('div');
+//         gridItem.classList.add('grid-item');
+
+//         let img = document.createElement('img');
+//         img.src = 'data:image/jpeg;base64,' + image;
+//         img.alt = "Dynamic Photo " + (index + 1);
+//         img.style.display = 'block';
+
+//         img.onclick = function() {
+//             openModal(img.src);
+//         };
+
+//         gridItem.appendChild(img);
+//         gridContainer.appendChild(gridItem);
+//     });
+// }
+
 function addPhotosToGrid(images) {
+    console.log('HERE');
     document.getElementById('inImageContainer').style.display = 'block';
 
     const gridContainer = document.getElementById('photo-grid');
-    gridContainer.style.display = 'block';
-    images.forEach((image, index) => {
-        if (index >= 5) return; // Ограничиваем до 5 фото
+    gridContainer.innerHTML = ''; // Очищаем контейнер перед добавлением новых изображений
+    gridContainer.style.display = 'grid';
 
-        let gridItem = document.createElement('div');
-        gridItem.classList.add('grid-item');
+    console.log('Images to render:', images.length);
 
-        let img = document.createElement('img');
-        img.src = 'data:image/jpeg;base64,' + image;
-        img.alt = "Dynamic Photo " + (index + 1);
-        img.style.display = 'block';
+    // Добавляем первое фото в качестве большого фото
+    if (images.length > 0) {
+        let largePhotoContainer = document.createElement('div');
+        largePhotoContainer.classList.add('grid-item-large'); // класс для большого фото
 
-        // Добавляем событие на увеличение фото
-        img.onclick = function() {
-            openModal(img.src);
+        let largePhoto = document.createElement('img');
+        largePhoto.src = 'data:image/jpeg;base64,' + images[0];
+        largePhoto.alt = "Large Dynamic Photo";
+        largePhoto.style.display = 'block';
+
+        // Добавляем событие клика для открытия модального окна
+        largePhoto.onclick = function() {
+            openModal(largePhoto.src);
         };
 
-        gridItem.appendChild(img);
-        gridContainer.appendChild(gridItem);
+        largePhotoContainer.appendChild(largePhoto);
+        gridContainer.appendChild(largePhotoContainer);
+    }
+
+    // Добавляем остальные фото в сетку (макс. 4 маленьких фото)
+    images.slice(1, 5).forEach((image, index) => {
+        console.log(`Adding small image ${index + 1}`);
+
+        let smallPhotoContainer = document.createElement('div');
+        smallPhotoContainer.classList.add('grid-item-small'); // класс для маленьких фото
+
+        let smallPhoto = document.createElement('img');
+        smallPhoto.src = 'data:image/jpeg;base64,' + image;
+        smallPhoto.alt = "Dynamic Photo " + (index + 1);
+        smallPhoto.style.display = 'block';
+
+        // Добавляем событие клика для открытия модального окна
+        smallPhoto.onclick = function() {
+            openModal(smallPhoto.src);
+        };
+
+        smallPhotoContainer.appendChild(smallPhoto);
+        gridContainer.appendChild(smallPhotoContainer);
     });
 }
 
 
-// Функции для модального окна (увеличение фото)
+// Функция для открытия изображения в модальном окне
 function openModal(imageSrc) {
+    console.log('Открытие изображения на весь экран:', imageSrc);
     const modal = document.getElementById('imageModal');
-    const modalImg = document.getElementById('modalImage');
+    const modalImage = document.getElementById('modalImage');
     modal.style.display = 'flex';
-    modalImg.src = imageSrc;
+    modalImage.src = imageSrc;
+
+    // Добавляем событие для закрытия модального окна по клику на изображение
+    modalImage.onclick = function() {
+        closeModal();
+    };
 }
 
+// Функция для закрытия модального окна
 function closeModal() {
     const modal = document.getElementById('imageModal');
     modal.style.display = 'none';
 }
-
-function addPhotosToGrid(images) {
-    const photoGrid = document.getElementById('photo-grid');
-
-    // Clear previous photos
-    photoGrid.innerHTML = '';
-
-    // Define the layout structure
-    const layout = ['single', 'double', 'double'];
-
-    // Add photos according to the layout
-    let imageIndex = 0;
-
-    for (const section of layout) {
-        if (section === 'single' && imageIndex < images.length) {
-            // Add single photo spanning full width
-            const img = document.createElement('img');
-            img.src = `data:image/jpeg;base64,${images[imageIndex]}`;
-            img.className = 'single-image';
-            photoGrid.appendChild(img);
-            imageIndex++;
-        } else if (section === 'double' && imageIndex < images.length) {
-            // Add two photos in one row
-            for (let i = 0; i < 2; i++) {
-                if (imageIndex < images.length) {
-                    const img = document.createElement('img');
-                    img.src = `data:image/jpeg;base64,${images[imageIndex]}`;
-                    img.className = 'double-image';
-                    photoGrid.appendChild(img);
-                    imageIndex++;
-                }
-            }
-        }
-    }
-}
-
