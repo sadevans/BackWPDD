@@ -33,7 +33,20 @@ document.getElementById('start-button').addEventListener('click', function() {
         //     document.getElementById('inImage').style.display = 'block';
         // console.log(data.in_image_url)
         console.log(data.images)
-        if (data.type === 'image_batch' && data.images){
+        if (data.type == 'camera_done'){
+            document.getElementById('pallete_id').innerText = `Pallete ID: ${data.pallete_id}`;
+            // вывести лог, что камера 1 сделала фото
+            mes = `Camera №${data.camera_id} has taken ${data.num_photos} photo...`
+            console.log(mes)
+
+        }else if (data.type=='pipeline_log'){
+            mes = data.message
+            console.log(mes)
+
+        }
+        
+        
+        else if (data.type === 'image_batch' && data.images){
             console.log('here');
             addPhotosToGrid(data.images);
             console.log('here');
@@ -125,4 +138,11 @@ function openModal(imageSrc) {
 function closeModal() {
     const modal = document.getElementById('imageModal');
     modal.style.display = 'none';
+}
+
+// Функция для сброса индикаторов (делаем их серыми)
+function resetIndicators() {
+    for (let i = 1; i <= 5; i++) {
+        document.getElementById(`photo-status-${i}`).style.backgroundColor = 'grey';
+    }
 }

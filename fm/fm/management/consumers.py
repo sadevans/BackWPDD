@@ -30,7 +30,7 @@ class WebSocketClient:
         if type == 'front_init':
             self.flag_front = True
         elif type == 'model_responce':
-            print(f"CAMERA {text_data_json['camera_id']} answer is {text_data_json['answer']}")
+            print(f"CAMERA {text_data_json['camera_id']} answer on picture {text_data_json['photo_id']} is {text_data_json['answer']}")
             self.flag_responce = text_data_json['answer']
 
 

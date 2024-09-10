@@ -124,3 +124,98 @@ body {
     font-size: 30px;
     cursor: pointer;
 }
+
+.pallet-info {
+    width: 200px; /* Задайте фиксированную ширину для контейнера, если это необходимо */
+    padding: 10px; /* Отступ вокруг текста */
+    /* border: 1px solid #ccc; Граница контейнера */
+    /* background-color: #f9f9f9; Фон контейнера */
+    box-sizing: border-box; /* Учитывает padding и border в ширине элемента */
+}
+
+#pallete_id {
+    margin: 0; /* Убираем отступы по умолчанию */
+    text-align: left; /* Выравнивание текста по левому краю */
+    font-weight: bold;
+}
+
+.status-container {
+    margin-top: 10px; /* Отступ сверху для разделения с текстом */
+}
+
+.status-label {
+    margin-bottom: 10px; /* Отступ снизу для разделения с кружочками */
+    font-weight: bold;
+}
+
+.status-circles {
+    display: flex; /* Выравнивание кружочков в ряд */
+    justify-content: space-around; /* Распределение кружочков по горизонтали */
+    align-items: flex-end; /* Выравнивание кружочков по нижнему краю */
+}
+
+.circle-wrapper {
+    text-align: center; /* Выравнивание текста по центру внутри обертки */
+}
+
+.circle {
+    width: 30px; /* Ширина кружочка */
+    height: 30px; /* Высота кружочка */
+    border-radius: 50%; /* Закругление для создания кружочка */
+    background-color: #D0D9D9; /* Цвет кружочка по умолчанию */
+    margin-bottom: 5px; /* Отступ снизу для размещения цифры */
+}
+
+.circle-number {
+    font-size: 14px; /* Размер шрифта для цифры */
+    color: #333; /* Цвет текста */
+}
+
+.stop-button-container {
+    display: flex; /* Выравнивание кнопки и текста в ряд */
+    align-items: left; /* Выравнивание по центру по вертикали */
+    margin-top: 20px; /* Отступ сверху для разделения с предыдущими элементами */
+}
+
+.stop-button {
+    width: 40px; /* Ширина кнопки */
+    height: 40px; /* Высота кнопки */
+    border-radius: 50%; /* Полное закругление для создания круга */
+    background-color: #D0D9D9; /* Цвет кнопки по умолчанию */
+    display: flex;
+    align-items: center;
+    /* justify-content: center; */
+    margin-right: 10px; /* Отступ справа для текста */
+    border: none; /* Убирае м стандартные границы кнопки */
+    cursor: pointer; /* Курсор при наведении */
+    position: relative; /* Для позиционирования внутреннего кружочка */
+    /* transition: background-color 0.3s, transform 0.2s; Плавные переходы для фона и трансформации */
+}
+
+.stop-button:hover {
+    background-color: #b0b0b0; /* Цвет кнопки при наведении */
+}
+
+.stop-button:active {
+    transform: scale(0.95); /* Немного уменьшает размер кнопки при нажатии */
+}
+
+.stop-button-inner {
+    width: 30px; /* Ширина внутреннего кружочка */
+    height: 30px; /* Высота внутреннего кружочка */
+    border-radius: 50%; /* Закругление для создания кружочка */
+    background-color: #E6341C; /* Красный цвет внутреннего кружочка */
+}
+
+
+.stop-button-inner {
+    width: 30px; /* Ширина внутреннего кружочка */
+    height: 30px; /* Высота внутреннего кружочка */
+    border-radius: 50%; /* Закругление для создания кружочка */
+    background-color: #E6341C; /* Красный цвет внутреннего кружочка */
+}
+
+.stop-button-text {
+    font-size: 14px; /* Размер шрифта для текста */
+    font-weight: bold;
+}
