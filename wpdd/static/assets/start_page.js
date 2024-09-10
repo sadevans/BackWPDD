@@ -38,14 +38,7 @@ document.getElementById('start-button').addEventListener('click', function() {
             addPhotosToGrid(data.images);
             console.log('here');
 
-        }
-        // if (data.type === 'image_batch' && data.images) {
-        //     // Добавление нескольких фото в сетку
-        //     console.log('here')
-        //     addPhotosToGrid(data.images);
-
-        // } 
-        else if (data.error) {
+        } else if (data.error) {
             console.error('Error received: ', data.error);
             statusElement.innerText = 'Status: Error';
         }
@@ -64,59 +57,26 @@ document.getElementById('start-button').addEventListener('click', function() {
 });
 
 
-
-// Функция для динамического добавления фотографий в сетку
-// function addPhotosToGrid(images) {
-//     console.log('HERE')
-//     document.getElementById('inImageContainer').style.display = 'block';
-
-//     const gridContainer = document.getElementById('photo-grid');
-//     gridContainer.innerHTML = ''; // Clear the grid for new images
-//     gridContainer.style.display = 'grid';
-
-//     console.log('Images to render:', images.length);
-
-//     images.slice(0, 5).forEach((image, index) => {
-//         console.log(`Adding image ${index + 1}`);
-
-//         let gridItem = document.createElement('div');
-//         gridItem.classList.add('grid-item');
-
-//         let img = document.createElement('img');
-//         img.src = 'data:image/jpeg;base64,' + image;
-//         img.alt = "Dynamic Photo " + (index + 1);
-//         img.style.display = 'block';
-
-//         img.onclick = function() {
-//             openModal(img.src);
-//         };
-
-//         gridItem.appendChild(img);
-//         gridContainer.appendChild(gridItem);
-//     });
-// }
-
 function addPhotosToGrid(images) {
     console.log('HERE');
     document.getElementById('inImageContainer').style.display = 'block';
 
     const gridContainer = document.getElementById('photo-grid');
-    gridContainer.innerHTML = ''; // Очищаем контейнер перед добавлением новых изображений
+    gridContainer.innerHTML = '';
     gridContainer.style.display = 'grid';
 
     console.log('Images to render:', images.length);
 
-    // Добавляем первое фото в качестве большого фото
+    
     if (images.length > 0) {
         let largePhotoContainer = document.createElement('div');
-        largePhotoContainer.classList.add('grid-item-large'); // класс для большого фото
-
+        largePhotoContainer.classList.add('grid-item-large');
         let largePhoto = document.createElement('img');
         largePhoto.src = 'data:image/jpeg;base64,' + images[0];
         largePhoto.alt = "Large Dynamic Photo";
         largePhoto.style.display = 'block';
 
-        // Добавляем событие клика для открытия модального окна
+        
         largePhoto.onclick = function() {
             openModal(largePhoto.src);
         };
@@ -125,19 +85,19 @@ function addPhotosToGrid(images) {
         gridContainer.appendChild(largePhotoContainer);
     }
 
-    // Добавляем остальные фото в сетку (макс. 4 маленьких фото)
+    
     images.slice(1, 5).forEach((image, index) => {
         console.log(`Adding small image ${index + 1}`);
 
         let smallPhotoContainer = document.createElement('div');
-        smallPhotoContainer.classList.add('grid-item-small'); // класс для маленьких фото
+        smallPhotoContainer.classList.add('grid-item-small');
 
         let smallPhoto = document.createElement('img');
         smallPhoto.src = 'data:image/jpeg;base64,' + image;
         smallPhoto.alt = "Dynamic Photo " + (index + 1);
         smallPhoto.style.display = 'block';
 
-        // Добавляем событие клика для открытия модального окна
+        
         smallPhoto.onclick = function() {
             openModal(smallPhoto.src);
         };
@@ -148,7 +108,6 @@ function addPhotosToGrid(images) {
 }
 
 
-// Функция для открытия изображения в модальном окне
 function openModal(imageSrc) {
     console.log('Открытие изображения на весь экран:', imageSrc);
     const modal = document.getElementById('imageModal');
@@ -156,13 +115,13 @@ function openModal(imageSrc) {
     modal.style.display = 'flex';
     modalImage.src = imageSrc;
 
-    // Добавляем событие для закрытия модального окна по клику на изображение
+
     modalImage.onclick = function() {
         closeModal();
     };
 }
 
-// Функция для закрытия модального окна
+
 function closeModal() {
     const modal = document.getElementById('imageModal');
     modal.style.display = 'none';

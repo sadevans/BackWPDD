@@ -4,4 +4,6 @@ from . import consumers
 # Define WebSocket URL patterns
 websocket_urlpatterns = [
     re_path(r'ws/chat/$', consumers.ChatConsumer.as_asgi()),  # Map WebSocket URL to ChatConsumer
+    re_path(r'ws/control/$', consumers.ControlConsumer.as_asgi()),  # Map WebSocket URL to ControlConsumer
+
 ]
