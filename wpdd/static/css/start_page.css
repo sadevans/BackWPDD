@@ -35,7 +35,7 @@ body {
     padding: 20px;
 }
 
-.left-half {
+/* .left-half {
     width: 50%;
     display: flex;
     flex-direction: column;
@@ -43,6 +43,32 @@ body {
     justify-content: center;
     padding: 2%;
     box-sizing: border-box;
+}
+
+.right-half {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2%;
+    box-sizing: border-box;
+} */
+
+.left-half, .right-half {
+    flex: 1;
+    padding: 20px;
+}
+
+.left-half {
+    border-right: 1px solid #ccc;
+}
+
+.right-half {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 
@@ -218,4 +244,127 @@ body {
 .stop-button-text {
     font-size: 14px; /* Размер шрифта для текста */
     font-weight: bold;
+}
+
+#photo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Две колонки для маленьких фото */
+    grid-gap: 10px;
+    max-width: 100%; /* Максимальная ширина контейнера */
+    max-height: 400px; /* Ограничиваем высоту, подставьте нужное значение */
+    overflow: hidden; /* Обрезаем контент, если он выходит за пределы контейнера */
+}
+
+.grid-item-large {
+    grid-column: span 2; /* Занимает две колонки */
+    width: 100%;
+    height: auto;
+}
+
+/* .grid-item-small {
+    width: 100%;
+    height: auto;
+    object-fit: cover; /* Масштабируем изображение, чтобы оно вписалось в контейнер */
+/* } */
+
+/* #photo-grid img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Сохраняем соотношение сторон изображения */
+/* }  */ */
+
+/* #photo-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Сначала одна колонка для первого фото */
+    /* grid-gap: 10px; Расстояние между фото */
+/* } */
+
+/* .grid-item-large {
+    grid-column: span 1;
+} */
+
+/* .grid-item-small {
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 5px;
+} */
+
+/*
+#photo-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 10px;
+} */
+
+/* .grid-item-large {
+    grid-column: 1 / -1;
+    width: 50%;
+}
+
+.grid-item-small {
+    width: 25%;
+}
+
+#photo-grid > .grid-item-small:nth-child(n+2) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px;
+}
+
+#inImageContainer {
+    width: 100%;
+    max-width: 100%;
+} */
+
+
+/* #photo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    grid-template-rows: auto auto auto; 
+    grid-gap: 10px;
+    grid-template-areas: 
+        "large large" 
+        "small1 small2" 
+        "small3 small4"; 
+} */
+
+#photo-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Две колонки */
+    grid-template-rows: auto auto auto; /* Три строки: первая для большого фото, остальные для маленьких */
+    grid-gap: 10px;
+}
+
+/* Первое фото большое, оно занимает всю ширину (2 колонки) */
+.grid-item-large {
+    grid-column: 1 / span 2;
+    grid-row: 1;
+    width: 100%;
+}
+
+/* Второе фото под первым фото, слева */
+.grid-item-small:nth-child(2) {
+    grid-column: 1;
+    grid-row: 2;
+    width: 100%;
+}
+
+/* Третье фото под первым фото, справа */
+.grid-item-small:nth-child(3) {
+    grid-column: 2;
+    grid-row: 2;
+    width: 100%;
+}
+
+/* Четвёртое фото под вторым фото, слева */
+.grid-item-small:nth-child(4) {
+    grid-column: 1;
+    grid-row: 3;
+    width: 100%;
+}
+
+/* Пятое фото под третьим фото, справа */
+.grid-item-small:nth-child(5) {
+    grid-column: 2;
+    grid-row: 3;
+    width: 100%;
 }

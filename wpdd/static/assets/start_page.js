@@ -1,4 +1,5 @@
 let chatSocket;
+let gridContainer = document.getElementById('photo-grid');
 
 document.getElementById('start-button').addEventListener('click', function() {
     console.log(chatSocket)
@@ -13,45 +14,39 @@ document.getElementById('start-button').addEventListener('click', function() {
 
     chatSocket.onopen = function() {
         console.log('WebSocket соединение установлено');
-        const message = {
-            'message': 'Пошел нахуй'
-          };
-          chatSocket.send(JSON.stringify(message));
     };
 
     chatSocket.onmessage = function(e) {
         const data = JSON.parse(e.data);
-        console.log('Сообщение получено: ', data);
 
         if (data.message == 'Success'){
             document.getElementById('start-button').style.display = 'none';
-            // document.getElementById('inImagesContainer').style.display = 'block';
         }
 
-        // if (data.type === 'image' && data.in_image_url) {
-        //     document.getElementById('inImage').src = 'data:image/jpeg;base64,' + data.in_image_url;
-        //     document.getElementById('inImage').style.display = 'block';
-        // console.log(data.in_image_url)
-        console.log(data.images)
-        if (data.type == 'camera_done'){
+        else if (data.type == 'new_pallete_arrived'){
+            console.log(data.message);
+            clearGrid();
+            resetCircles();
             document.getElementById('pallete_id').innerText = `Pallete ID: ${data.pallete_id}`;
-            // вывести лог, что камера 1 сделала фото
-            mes = `Camera №${data.camera_id} has taken ${data.num_photos} photo...`
-            console.log(mes)
+        }
+        else if (data.type == 'camera_done'){
+            mes = `Camera №${data.camera_id} has taken ${data.num_photos} photo...`;
+            console.log(mes);
 
         }else if (data.type=='pipeline_log'){
-            mes = data.message
-            console.log(mes)
+            mes = data.message;
+            console.log(mes);
+            addPhotosToGrid(data.images, data.photo_id);
+            updateCircleStatus(data.photo_id, data.answer_text);
 
         }
+        else if (data.type == 'pipeline_send_answer'){
+            console.log(data.message);
+            console.log(data.images.length);
+            console.log(data.answer);
+        }
         
-        
-        else if (data.type === 'image_batch' && data.images){
-            console.log('here');
-            addPhotosToGrid(data.images);
-            console.log('here');
-
-        } else if (data.error) {
+         else if (data.error) {
             console.error('Error received: ', data.error);
             statusElement.innerText = 'Status: Error';
         }
@@ -70,59 +65,80 @@ document.getElementById('start-button').addEventListener('click', function() {
 });
 
 
-function addPhotosToGrid(images) {
-    console.log('HERE');
+function addPhotosToGrid(images, photo_id) {
+
     document.getElementById('inImageContainer').style.display = 'block';
 
-    const gridContainer = document.getElementById('photo-grid');
-    gridContainer.innerHTML = '';
-    gridContainer.style.display = 'grid';
+    const isGridEmpty = gridContainer.children.length === 0;
 
-    console.log('Images to render:', images.length);
-
-    
-    if (images.length > 0) {
+    if (isGridEmpty && photo_id == 1) {
         let largePhotoContainer = document.createElement('div');
         largePhotoContainer.classList.add('grid-item-large');
+
         let largePhoto = document.createElement('img');
         largePhoto.src = 'data:image/jpeg;base64,' + images[0];
         largePhoto.alt = "Large Dynamic Photo";
         largePhoto.style.display = 'block';
 
-        
-        largePhoto.onclick = function() {
+        largePhoto.onclick = function () {
             openModal(largePhoto.src);
         };
 
         largePhotoContainer.appendChild(largePhoto);
         gridContainer.appendChild(largePhotoContainer);
-    }
-
+    } 
     
-    images.slice(1, 5).forEach((image, index) => {
-        console.log(`Adding small image ${index + 1}`);
+    else if (!isGridEmpty && photo_id >= 2) {
+        images.forEach((image, index) => {
+            let photoContainer = document.createElement('div');
+            photoContainer.classList.add('grid-item-small');
 
-        let smallPhotoContainer = document.createElement('div');
-        smallPhotoContainer.classList.add('grid-item-small');
+            let photo = document.createElement('img');
+            photo.src = 'data:image/jpeg;base64,' + image;
+            photo.alt = "Dynamic Photo " + (index + 1);
+            photo.style.display = 'block';
 
-        let smallPhoto = document.createElement('img');
-        smallPhoto.src = 'data:image/jpeg;base64,' + image;
-        smallPhoto.alt = "Dynamic Photo " + (index + 1);
-        smallPhoto.style.display = 'block';
+            photo.onclick = function () {
+                openModal(photo.src);
+            };
 
-        
-        smallPhoto.onclick = function() {
-            openModal(smallPhoto.src);
-        };
+            photoContainer.appendChild(photo);
+            gridContainer.appendChild(photoContainer);
+        });
+    }
+}
 
-        smallPhotoContainer.appendChild(smallPhoto);
-        gridContainer.appendChild(smallPhotoContainer);
-    });
+
+function clearGrid() {
+    gridContainer.innerHTML = '';
+}
+
+
+function updateCircleStatus(photoId, status) {
+    const circle = document.getElementById(`circle${photoId}`);
+    if (circle) {
+        if (status === 'OK') {
+            circle.style.backgroundColor = '#84C950';
+        } else if (status === 'Defect') {
+            circle.style.backgroundColor = '#E6341C';
+        } else {
+            circle.style.backgroundColor = '#D0D9D9';
+        }
+    }
+}
+
+
+function resetCircles() {
+    for (let i = 1; i <= 5; i++) {
+        const circle = document.getElementById(`circle${i}`);
+        if (circle) {
+            circle.style.backgroundColor = '#D0D9D9';
+        }
+    }
 }
 
 
 function openModal(imageSrc) {
-    console.log('Открытие изображения на весь экран:', imageSrc);
     const modal = document.getElementById('imageModal');
     const modalImage = document.getElementById('modalImage');
     modal.style.display = 'flex';
@@ -140,7 +156,7 @@ function closeModal() {
     modal.style.display = 'none';
 }
 
-// Функция для сброса индикаторов (делаем их серыми)
+
 function resetIndicators() {
     for (let i = 1; i <= 5; i++) {
         document.getElementById(`photo-status-${i}`).style.backgroundColor = 'grey';

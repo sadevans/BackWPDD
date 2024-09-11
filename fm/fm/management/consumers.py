@@ -24,7 +24,6 @@ class WebSocketClient:
         self.flag_responce = None
 
     def on_message(self, ws, text_data):
-        print("kjsdhasjkda")
         text_data_json = json.loads(text_data)
         type = text_data_json['type']
         if type == 'front_init':
@@ -46,11 +45,24 @@ class WebSocketClient:
 
         print("Connection established")
 
-    def send_message_camera(self, camera_id):
+    def send_message_camera(self, camera_id, timestamp):
         self.ws.send(data=json.dumps({
-                        'type': camera_id,
+                        'type': 'camera',
+                        'camera_id': camera_id,
+                        'pallete_id': timestamp, 
                         'message': 'Take photos on camera1'
                     }))
+        
+    def new_pallete_came(self):
+        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+
+        self.ws.send(data=json.dumps({
+                        'type': 'get_new_pallete',
+                        'message': 'New pallete has arrived!',
+                        'pallete_id': timestamp
+                    }))
+        return timestamp
+
     
 
     def connect(self):
@@ -75,42 +87,45 @@ if __name__ == "__main__":
 
     client = WebSocketClient(websocket_url)
     client.connect()
-    print('FLAG: ', client.flag_front)
-    # Keep the main thread alive to allow WebSocket communication
     k = 0
     try:
         while True:
-            print(client.flag_front)
+            time.sleep(0.05)
 
             if client.flag_front:
-                print("ok now i am here")
-                time.sleep(2) # имитация задержки перед приходом новой паллетя
-                client.send_message_camera('camera1') # команда камере №1 делать фото
+                time.sleep(2) # имитация задержки перед приходом новой паллета
+                pallete_id = client.new_pallete_came()
+                client.send_message_camera(1, pallete_id)  # команда камере №1 делать фото
 
                 while not client.flag_responce:
+                    time.sleep(0.05)
                     pass
                 
                 if client.flag_responce == 'OK':
                     client.flag_responce = None
                     # time.sleep(1)
-                    client.send_message_camera('camera2')
+                    client.send_message_camera(2, pallete_id)
                     print('Pallete is sended to the camera №2 zone')
                     while not client.flag_responce:
+                        time.sleep(0.05)
                         pass
                     if client.flag_responce == 'Defect':
+                        client.flag_responce = None
+
                         print('Pallete is send to the replacement zone after camera2')
+                        time.sleep(3)
 
                 elif client.flag_responce == 'Defect':
                     client.flag_responce = None
                     print('Pallete is send to the replacement zone')
                     time.sleep(3)
 
-                # k += 1
+            #     k += 1
 
-                # if k == 3:
-                    # client.close()
-                    # print('here')
-                    # break
+            # if k == 3:
+            #     client.close()
+            #     print('here')
+            #     break
 
 
 
