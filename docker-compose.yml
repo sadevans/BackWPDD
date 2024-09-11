@@ -1,0 +1,25 @@
+version: '3'
+services:
+  # wpdd_system:
+    # image: wpdd:1.0
+    # ports:
+    #   - "8080:8080"
+    # # entrypoint: [ "python", "backend/liprwead/manage.py", "runserver", "0.0.0.0:8080" ]
+    # environment:
+    #   - INTERNAL_WEIGHT_PATH
+    #   - INTERNAL_CONFIG_PATH
+    # volumes:
+      # - ./model_zoo/epoch=8.ckpt:/usr/local/lib/python3.8/site-packages/model_zoo/epoch=8.ckpt:ro
+      # - ./model_zoo/config.yaml:${INTERNAL_CONFIG_PATH}:ro     
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./dаta:/root/redis
+    environment:
+      - REDIS_PASSWORD=asdfghjkl
+      - REDIS_PORT=6379
+      - REDIS_DATABASES=16
+

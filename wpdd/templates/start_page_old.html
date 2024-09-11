@@ -1,0 +1,37 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/start_page.css' %}">  
+    <title>Start Page</title>
+
+</head>
+<body>
+    <div class="container">
+        <!-- Левая половина (с фотографиями) -->
+        <div class="left-half">
+            <button id="start-button">Начать работу</button>
+
+            <!-- Контейнер для изображений -->
+            <div id="inImageContainer" style="display: none;">
+                <div id="photo-grid" class="photo-grid"></div>
+
+                <!-- Модальное окно -->
+                <div id="imageModal" class="modal" style="display: none;">
+                    <span id="closeModal" class="close">&times;</span>
+                    <img id="modalImage" class="modal-content">
+                </div>
+            </div>
+        </div>
+
+        <!-- Правая половина (пустая) -->
+        <div class="right-half" style="display: none;">
+            <!-- Содержимое правой половины можно оставить пустым -->
+        </div>
+    </div>
+
+    <script src="{% static 'assets/start_page.js' %}"></script>
+</body>
+</html>

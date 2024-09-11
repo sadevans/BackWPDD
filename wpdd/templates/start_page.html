@@ -1,0 +1,69 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/start_page.css' %}">  
+    <title>Start Page</title>
+
+</head>
+<body>
+    <div class="container">
+        <!-- Левая половина (с фотографиями) -->
+        <div class="left-half">
+            <button id="start-button">Начать работу</button>
+
+            <div class="pallet-info">
+                <p id="pallete_id">Pallet ID: </p>
+                <div class="status-container">
+                    <div class="status-label">Photo status</div>
+                    <div class="status-circles">
+                        <div class="circle-wrapper">
+                            <div class="circle" id="circle1"></div>
+                            <div class="circle-number">1</div>
+                        </div>
+                        <div class="circle-wrapper">
+                            <div class="circle" id="circle2"></div>
+                            <div class="circle-number">2</div>
+                        </div>
+                        <div class="circle-wrapper">
+                            <div class="circle" id="circle3"></div>
+                            <div class="circle-number">3</div>
+                        </div>
+                        <div class="circle-wrapper">
+                            <div class="circle" id="circle4"></div>
+                            <div class="circle-number">4</div>
+                        </div>
+                        <div class="circle-wrapper">
+                            <div class="circle" id="circle5"></div>
+                            <div class="circle-number">5</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <div class="stop-button-container">
+                    <div class="stop-button">
+                        <div class="stop-button-inner"></div>
+                    </div>
+                    <div class="stop-button-text">Остановить детектирование</div>
+                </div> -->
+            
+            </div>
+        </div>
+        <div class="right-half">
+            <div id="inImageContainer" style="display: none;"></div>
+                <div id="photo-grid" class="photo-grid"></div>
+
+                <!-- Модальное окно -->
+                <div id="imageModal" class="modal" style="display: none;">
+                    <span id="closeModal" class="close">&times;</span>
+                    <img id="modalImage" class="modal-content">
+                </div>
+            </div>
+            <!-- Содержимое правой половины можно оставить пустым -->
+        </div>
+    </div>
+
+    <script src="{% static 'assets/start_page.js' %}"></script>
+</body>
+</html>
