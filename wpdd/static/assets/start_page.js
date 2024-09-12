@@ -2,13 +2,12 @@ let chatSocket;
 let gridContainer = document.getElementById('photo-grid');
 
 document.getElementById('start-button').addEventListener('click', function() {
-    console.log(chatSocket)
     if (chatSocket && chatSocket.readyState === WebSocket.OPEN) {
         console.log('WebSocket уже подключен');
         return;
     }
 
-    chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/');
+    chatSocket = new WebSocket('ws://' + window.location.host + '/ws/chat/')
     console.log(chatSocket)
 
 
@@ -23,7 +22,6 @@ document.getElementById('start-button').addEventListener('click', function() {
 
     chatSocket.onmessage = function(e) {
         const data = JSON.parse(e.data);
-        console.log(data.message)
         
         if (data.message == 'Success'){
             document.getElementById('start-button').style.display = 'none';
@@ -32,8 +30,10 @@ document.getElementById('start-button').addEventListener('click', function() {
 
         else if (data.type == 'new_pallete_arrived'){
             console.log(data.message);
-            clearGrid();
+            
+            clearAllPhotos();
             resetCircles();
+            document.getElementById('pipelineAnswer').style.display = 'none';
             document.getElementById('pallete_id').innerText = `Pallete ID: ${data.pallete_id}`;
         }
         else if (data.type == 'camera_done'){
@@ -49,8 +49,14 @@ document.getElementById('start-button').addEventListener('click', function() {
         }
         else if (data.type == 'pipeline_send_answer'){
             console.log(data.message);
-            console.log(data.images.length);
-            console.log(data.answer);
+
+            if (data.answer == 'Defect'){
+                updatePalleteStatus(data.answer);
+            }
+            else if (data.photo_id == 5){
+                updatePalleteStatus(data.answer);
+
+            }
         }
         
          else if (data.error) {
@@ -71,53 +77,36 @@ document.getElementById('start-button').addEventListener('click', function() {
     };
 });
 
-
-function addPhotosToGrid(images, photo_id) {
-
-    document.getElementById('inImageContainer').style.display = 'block';
-
-    const isGridEmpty = gridContainer.children.length === 0;
-
-    if (isGridEmpty && photo_id == 1) {
-        let largePhotoContainer = document.createElement('div');
-        largePhotoContainer.classList.add('grid-item-large');
-
-        let largePhoto = document.createElement('img');
-        largePhoto.src = 'data:image/jpeg;base64,' + images[0];
-        largePhoto.alt = "Large Dynamic Photo";
-        largePhoto.style.display = 'block';
-
-        largePhoto.onclick = function () {
-            openModal(largePhoto.src);
-        };
-
-        largePhotoContainer.appendChild(largePhoto);
-        gridContainer.appendChild(largePhotoContainer);
-    } 
+let imageWidth;
+function addPhotosToGrid(photoData, photoId) {
+    const imgElement = document.createElement('img');
+    imgElement.src = `data:image/jpeg;base64,${photoData}`;
     
-    else if (!isGridEmpty && photo_id >= 2) {
-        images.forEach((image, index) => {
-            let photoContainer = document.createElement('div');
-            photoContainer.classList.add('grid-item-small');
-
-            let photo = document.createElement('img');
-            photo.src = 'data:image/jpeg;base64,' + image;
-            photo.alt = "Dynamic Photo " + (index + 1);
-            photo.style.display = 'block';
-
-            photo.onclick = function () {
-                openModal(photo.src);
-            };
-
-            photoContainer.appendChild(photo);
-            gridContainer.appendChild(photoContainer);
-        });
+    if (photoId === 1) {
+        imageWidth = imgElement.clientWidth;
+        
+        const container = document.getElementById('inImageContainer');
+        container.innerHTML = ''; 
+        container.appendChild(imgElement);
+        
+        document.getElementById('inImageContainer').style.display = 'flex'; 
+        
+    } else {
+        
+        const photoGrid = document.getElementById('photo-grid');
+        photoGrid.style.display = 'grid'; 
+        photoGrid.appendChild(imgElement);
     }
 }
 
 
-function clearGrid() {
-    gridContainer.innerHTML = '';
+function clearAllPhotos() {
+    const inImageContainer = document.getElementById('inImageContainer');
+    inImageContainer.innerHTML = ''; 
+    const photoGrid = document.getElementById('photo-grid');
+    photoGrid.innerHTML = ''; 
+    
+
 }
 
 
@@ -127,12 +116,30 @@ function updateCircleStatus(photoId, status) {
         if (status === 'OK') {
             circle.style.backgroundColor = '#84C950';
         } else if (status === 'Defect') {
-            circle.style.backgroundColor = '#E6341C';
-        } else {
-            circle.style.backgroundColor = '#D0D9D9';
-        }
+            circle.style.backgroundColor = '#E6341C';}
+        // } else {
+        //     circle.style.backgroundColor = '#D0D9D9';
+        // }
     }
 }
+
+function updatePalleteStatus(status) {
+    const statusText = document.getElementById('pipelineAnswer');
+    if (statusText) {
+        if (status === 'OK') {
+            statusText.style.backgroundColor = '#84C950';
+            statusText.innerText = 'OK';  // Use innerText to update the text
+        } else if (status === 'Defect') {
+            statusText.style.backgroundColor = '#E6341C';
+            statusText.innerText = 'Defect';  // Use innerText to update the text
+        } else {
+            statusText.style.backgroundColor = '#D0D9D9';
+            statusText.innerText = '';  // Clear the text if no valid status
+        }
+    }
+    statusText.style.display = 'block';  // Ensure the element is visible
+}
+
 
 
 function resetCircles() {
