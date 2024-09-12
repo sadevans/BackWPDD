@@ -14,13 +14,20 @@ document.getElementById('start-button').addEventListener('click', function() {
 
     chatSocket.onopen = function() {
         console.log('WebSocket соединение установлено');
+        const message = {
+            'message': 'WebSocket соединение установлено'
+          };
+          chatSocket.send(JSON.stringify(message));
     };
+
 
     chatSocket.onmessage = function(e) {
         const data = JSON.parse(e.data);
-
+        console.log(data.message)
+        
         if (data.message == 'Success'){
             document.getElementById('start-button').style.display = 'none';
+            document.getElementById('pallet-info').style.display = 'block';
         }
 
         else if (data.type == 'new_pallete_arrived'){
