@@ -120,5 +120,59 @@ docker compose up -d
 
 
 
-###
+### Файловая архитектура проекта
+  ```
+  .
+  ├── wpdd
+  |   ├── wpdd
+  |   |   |──core
+  |   |   |  |──migrations
+  |   |   |  |  └── start_page.css
+  |   |   |  |
+  |   |   |  |──__init__.py
+  |   |   |  |──admin.py
+  |   |   |  |──apps.py
+  |   |   |  |──consumers.py
+  |   |   |  |──models.py
+  |   |   |  |──routing.py
+  |   |   |  |──tests.py
+  |   |   |  |──views.py
+  |   |   |
+  |   |   |──__init__.py
+  |   |   |──asgi.py
+  |   |   |──settings.py
+  |   |   |──urls.py
+  |   |   |──wsgi.py
+  |   |
+  |   ├── templates
+  |   |   └── start_page.html
+  |   |
+  |   ├── statiс
+  |   |   └── assets
+  |   |   |   └── start_page.js
+  |   |   |
+  |   |   └── css
+  |   |       └── start_page.css
+  |   └── manage.py
+  |   └── __init__.py
+  |
+  ├── fm
+  |   ├──consumers.py
+  |   ├──dockerfile
+  |   ├──requirements.txt
+  |
+  ├── model
+  |   ├──WPDD
+  |
+  ├── testfolder
+  ├──.dockerignore
+  ├──.gitignore
+  ├──.gitmodules
+  ├──README.md
+  ├──docker-compose.yml
+  ├──dockerfile
+  ├──requirements.txt
+  ```
+
+
 
