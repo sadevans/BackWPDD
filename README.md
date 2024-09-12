@@ -87,7 +87,8 @@ docker compose up -d
 
 
 ## Схема разработанной системы
-![conveyor-cameras-inference drawio (1)](https://github.com/user-attachments/assets/e34cfd73-7bbe-4a4e-b32f-9987b3e4f478)
+![schema](https://github.com/user-attachments/assets/9cbf4913-8f0a-4ca4-8162-1851ece1a771)
+
 
 Описание общения элементов системы:
 1. Паллет приходит по конвейеру в зону камеры К1, конвейер останавливается, отправляет сигнал
