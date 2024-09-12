@@ -23,6 +23,7 @@
 
 [Саша](https://github.com/sadevans) - `Backend developer`, `Devops`
 
+Алина и Глеб вели разработку в [репозитории модели](https://github.com/sadevans/WPDD).
 
 ## Установка
 Для начала склонируйте репозиторий:
@@ -78,7 +79,7 @@ docker compose up -d
 - Vanilla JS
 - HTML + CSS
 
-Разработка модели велась Алиной и Глебом в [репозитории модели](https://github.com/sadevans/WPDD)/. Для разработки использовались:
+Разработка модели велась Алиной и Глебом в [репозитории модели](https://github.com/sadevans/WPDD). Для разработки использовались:
 - PyTorch
 - Torchvision
 - Ultralitics YOLO
@@ -97,9 +98,12 @@ docker compose up -d
 
 ## Используемые модели
 
+Весь код моделей можно найти в [этом репозитории](https://github.com/sadevans/WPDD).
 
-
-
+- [Модель детекции паллетов и дефектов паллетов [YOLO]](https://drive.google.com/file/d/1XsLvJ6dbJ4yyBbTFzl66V1UQbWQCSlKt/view?usp=sharing)
+- [Модель классификации паллетов (в пленке / не в пленке) [MobileNetV2]](https://drive.google.com/file/d/1ZVC8dSctN0Y13qOBmPS7XZXf268Ze-FU/view?usp=sharing)
+- [Модель классификации паллетов сбоку (заменить / не заменить) [ViT]](https://drive.google.com/file/d/1US2OXAzxvxiCNdqhHjbYOpCFdihkOqPj/view?usp=sharing)
+- [Модель классификации паллетов снизу (заменить / не заменить) [ViT]](https://drive.google.com/file/d/1hRHMrUeWchxfvrNhMT_qEDqU1OLNAlHO/view?usp=sharing)
 
 
 ## Схема разработанной системы
