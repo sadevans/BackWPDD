@@ -91,9 +91,10 @@ if __name__ == "__main__":
     try:
         while True:
             time.sleep(0.05)
-
+            print('here')
             if client.flag_front:
                 time.sleep(2) # имитация задержки перед приходом новой паллета
+                print('IM HERE')
                 pallete_id = client.new_pallete_came()
                 client.send_message_camera(1, pallete_id)  # команда камере №1 делать фото
 
