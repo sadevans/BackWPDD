@@ -28,11 +28,15 @@
 - Учесть, что пропуск поврежденной паллеты критичнее, чем замена хорошей паллеты
 
 ### Распределение ролей
-[Алина](https://github.com/Firally) - ML engineer
-[Глеб](https://github.com/onoregleb) - ML engineer, Data engineer
-[Юля](https://github.com/YuliaOv22) - Product Manager
-[Миша](https://github.com/justroflangit) - Data engineer
-[Саша](https://github.com/sadevans) - Backend developer, Devops
+[Алина](https://github.com/Firally) - `ML engineer`
+
+[Глеб](https://github.com/onoregleb) - `ML engineer`, `Data engineer`
+
+[Юля](https://github.com/YuliaOv22) - `Product Manager`
+
+[Миша](https://github.com/justroflangit) - `Data engineer`
+
+[Саша](https://github.com/sadevans) - `Backend developer`, `Devops`
 
 
 ## Установка
