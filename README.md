@@ -87,10 +87,30 @@ docker compose up -d
 
 В качестве оркестратора выборан Docker-Compose.
 
+## Используемые датасеты
+- [Распознавание дефектов дерева (Large Scale Image Dataset of Wood Surface Defects)](https://www.kaggle.com/datasets/nomihsa965/large-scale-image-dataset-of-wood-surface-defects)
+
+- [Распознавание паллет (pallet detection Computer Vision Project)](https://universe.roboflow.com/sundharesan-kumaresan/pallet-detection-ith6b)
+- [Распознавание паллет (Computer Vision Project)]([https://universe.roboflow.com/sundharesan-kumaresan/pallet-detection-ith6b](https://universe.roboflow.com/palette/x-nbtav))
+- [Самостоятельно собранный датасет + разметка](https://drive.google.com/drive/folders/1Z_Monpry0OlOtElsb2btXsvmj8nBJ3dB)
+
+
+## Используемые модели
+
+
+
+
+
 
 ## Схема разработанной системы
 ![schema](https://github.com/user-attachments/assets/9cbf4913-8f0a-4ca4-8162-1851ece1a771)
 
+Элементы системы:
+- WebSocket клиент
+- Сервер - реализован с помощью двух консьюмеров, один общается с веб-страницей, второй с WebSocket клиентом, общение между этими консьюмерами реализовано через Reddis
+- Веб-страница
+- Камеры К1 и К2 - имитированы засчет копирования фото из тестовой папки
+- Конвейер - имитирован засчет задержек после основных команд
 
 Описание общения элементов системы:
 1. Паллет приходит по конвейеру в зону камеры К1, конвейер останавливается, отправляет сигнал
@@ -120,7 +140,9 @@ docker compose up -d
     _Фото обрабатываются последовательно, при первом обнаружении дефекта процесс детекции останавливается, паллета едет на замену_
 
 ### UML-диаграмма последовательности
+Логика общения между различными элементами системы представлена на UML-диаграмме
 
+![uml](https://github.com/user-attachments/assets/cebc4fff-ac22-4932-b516-a1994f6e50e7)
 
 
 ### Файловая архитектура проекта
