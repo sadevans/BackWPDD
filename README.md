@@ -1,5 +1,3 @@
-<img src="./images/logo.sample.png" alt="Logo of the project" align="right">
-
 # WPDD System: Wood Pallete Defect Detection System
 
 Система компьютерного зрения для автоматического обнаружения дефектов паллет.
@@ -43,6 +41,17 @@ docker compose up -d
 Теперь загрузились все необходимые библиотеки и пакеты, скачались веса моделей. Система готова к работе.
 
 После этого можно будет перейти на веб-страницу по адресу ВПИСАТЬ АДРЕС и начать работу.
+
+### Пререквизиты
+В скриптах используются следующие переменные среды:
+- `YOLO_MODEL_PATH` = 'pallets_plus_defects.pt'
+- `BOTTOM_CLASSIF_MODEL_PATH` = 'vit_bottom_v2.pth'
+- `SIDE_CLASSIF_MODEL_PATH` = 'vit_side_v2.pth'
+- `PACKET_CLASSIF_MODEL_PATH` = 'mobilenet_v2_binary_classification_packet.pth'
+- `MODELS_PATH` = './model_zoo/'
+
+Переменные среды можно изменить в docker-compose через .env
+
 
 ## Использование
 
@@ -107,5 +116,9 @@ docker compose up -d
 
     _Фото обрабатываются последовательно, при первом обнаружении дефекта процесс детекции останавливается, паллета едет на замену_
 
+### UML-диаграмма последовательности
 
+
+
+###
 
