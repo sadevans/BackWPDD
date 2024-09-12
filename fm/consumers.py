@@ -1,17 +1,6 @@
-import base64
 import json
-from channels.generic.websocket import AsyncWebsocketConsumer
-# from django.core.files import File
-# from django.core.files.storage import default_storage
-# from django.conf import settings
 from datetime import datetime
 import os
-import cv2
-import numpy as np
-import shutil
-import subprocess
-
-
 import websocket
 import threading
 import time
@@ -83,7 +72,7 @@ class WebSocketClient:
 
 if __name__ == "__main__":
     # Replace with your WebSocket server URL
-    websocket_url = "ws://localhost:8000/ws/control/"
+    websocket_url = os.environ.get("WS_CONTROL_URL")
 
     client = WebSocketClient(websocket_url)
     client.connect()
@@ -91,13 +80,12 @@ if __name__ == "__main__":
     try:
         while True:
             time.sleep(0.05)
-
             if client.flag_front:
                 time.sleep(2) # имитация задержки перед приходом новой паллета
-                pallete_id = client.new_pallete_came()
+                pallete_id = client.new_pallete_came() # сигнал, что пришел новый паллет
                 client.send_message_camera(1, pallete_id)  # команда камере №1 делать фото
 
-                while not client.flag_responce:
+                while not client.flag_responce: # ожидаем ответа пайплайна
                     time.sleep(0.05)
                     pass
                 
@@ -111,33 +99,13 @@ if __name__ == "__main__":
                         pass
                     if client.flag_responce == 'Defect':
                         client.flag_responce = None
-
                         print('Pallete is send to the replacement zone after camera2')
-                        time.sleep(3)
+                    # time.sleep(3)
 
                 elif client.flag_responce == 'Defect':
                     client.flag_responce = None
                     print('Pallete is send to the replacement zone')
                     time.sleep(3)
-
-            #     k += 1
-
-            # if k == 3:
-            #     client.close()
-            #     print('here')
-            #     break
-
-
-
-
-                    
-            # pass
-            # if client.flag_front:
-            #     print("ok now i am here")
-            #     time.sleep(1)
-            #     client.send_message_first_camera()
-            #     time.sleep(1)
-            #     break
 
     except KeyboardInterrupt:
         print("Interrupted by user, closing connection...")

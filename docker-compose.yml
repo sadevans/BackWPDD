@@ -1,16 +1,5 @@
-version: '3'
+version: '3.9'
 services:
-  # wpdd_system:
-    # image: wpdd:1.0
-    # ports:
-    #   - "8080:8080"
-    # # entrypoint: [ "python", "backend/liprwead/manage.py", "runserver", "0.0.0.0:8080" ]
-    # environment:
-    #   - INTERNAL_WEIGHT_PATH
-    #   - INTERNAL_CONFIG_PATH
-    # volumes:
-      # - ./model_zoo/epoch=8.ckpt:/usr/local/lib/python3.8/site-packages/model_zoo/epoch=8.ckpt:ro
-      # - ./model_zoo/config.yaml:${INTERNAL_CONFIG_PATH}:ro     
   redis:
     image: redis:latest
     restart: always
@@ -22,4 +11,50 @@ services:
       - REDIS_PASSWORD=asdfghjkl
       - REDIS_PORT=6379
       - REDIS_DATABASES=16
+    networks:
+      - default
+  
 
+  operator-server:
+    build:
+      dockerfile: dockerfile
+    ports:
+      - 8000:8000
+    restart: always
+    environment:
+      - REDIS_HOST
+      - PHOTO_MAIN_FOLDER
+      - FAKE_DATA_ROOT
+      - YOLO_MODEL_PATH
+      - BOTTOM_CLASSIF_MODEL_PATH
+      - SIDE_CLASSIF_MODEL_PATH
+      - PACKET_CLASSIF_MODEL_PATH
+      - MODELS_PATH
+      - COMPILED
+    volumes:
+      - ./testfolder:/home/data
+    networks:
+      - default
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://operator-server:8000"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 3s
+
+
+  sideclient:
+    build:
+      context: fm
+      dockerfile: dockerfile
+    depends_on:
+      operator-server:
+        condition: service_healthy
+    restart: always
+    environment:
+      - WS_CONTROL_URL
+    networks:
+      - default
+
+networks:
+  default:
