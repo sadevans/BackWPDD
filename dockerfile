@@ -1,7 +1,5 @@
 FROM python:3.8-slim
 
-WORKDIR /opt/operator-server
-
 RUN export DEBIAN_FRONTEND=noninteractive && \
     export ACCEPT_EULA=Y && \
     apt-get update && \
@@ -15,9 +13,23 @@ RUN export DEBIAN_FRONTEND=noninteractive && \
     apt-get -y clean && \
     rm -rf /var/lib/apt/lists/*
 
+COPY model/WPDD/model_zoo /opt/operator-server/model/model_zoo
+
+COPY model/WPDD/pallet_processing /opt/operator-server/model/pallet_processing
+
+COPY model/WPDD/requirements.txt /opt/operator-server/model/requirements.txt
+
+COPY model/WPDD/setup.py /opt/operator-server/model/setup.py
+
+WORKDIR /opt/operator-server/model
+
+RUN pip install --no-cache-dir -e .
+
 COPY ./requirements.txt /opt/operator-server
 
-RUN pip install -r requirements.txt
+WORKDIR /opt/operator-server
+
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY wpdd /opt/operator-server/wpdd
 

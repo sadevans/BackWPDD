@@ -14,6 +14,7 @@ import shutil
 import subprocess
 import random
 import asyncio
+from pallet_processing.pipeline import InferencePipeline
 # from pipelines.pipelines import DetectDefectsPipeline
 
 
@@ -119,11 +120,13 @@ class ControlConsumer(AsyncWebsocketConsumer):
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        
         await self.channel_layer.group_add(
             'file_watch_group',
             self.channel_name
         )
         await self.accept()
+        self.pipeline = InferencePipeline()
 
 
     async def disconnect(self, close_code):
@@ -136,7 +139,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
-        print("here!!!!!")
         await self.send(text_data=json.dumps({
             'message': 'Success'
         }))
@@ -203,11 +205,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 photo_path = os.path.join(f"{settings.MEDIA_ROOT}/{timestamp}", photo) # абсолютный путь фотографии, лучше поменять
                 all_photos_abs.append(photo_path) 
 
-                # answer = IfDefectPalletePipeline(photo_path)
-                # answer = random.choice([0,1]) # имитация отработки пайплайна - рандомный выбор класса 0 или 1
-                if camera_id ==1:
-                    answer = 0
-                else: answer = random.choice([0,1])
+                output = self.pipeline.get_prediction(photo_path)
+                print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ", output)
+                answer = int(output['replace_pallet'])
 
                 # считывание данных для фронта - должны считывать выход модели
                 in_data_bytes = open(photo_path, "rb").read() # читаем фото для фронта
@@ -238,13 +238,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'images': [encoded_photo_in]
                     # 'camera_id': camera_id
                 }))
-
                 # отправка ответа контроллеру
-                if answer == 1: 
+                if answer == 1:
                     break
 
             except Exception as e:
-                await self.send(text_data=json.dumps({
+                self.send(text_data=json.dumps({
                     'error': str(e)
                 }))
 
@@ -259,7 +258,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                         'answer': answer_text,
                         'camera_id': camera_id,
                         'photo_id': num+1,
-                        'encoded_photos': [encoded_photo_in]
+                        'encoded_photos': [encoded_photo_in],
+                        'pallete_id': timestamp
                     }
                 )
 
@@ -271,9 +271,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'type': 'pipeline_send_answer',
 
                     'answer': event['answer'],
-                    'message': f"Photo №{event['photo_id']} is {event['answer']}",
+                    'message': f"Pallete №{event['pallete_id']} is {event['answer']}, answer on photo №{event['photo_id']}",
                     'images': event['encoded_photos'],
-                    'photo_id': event['photo_id']
+                    'photo_id': event['photo_id'],
+                    'pallete_id': event['pallete_id']
                     # 'answer': answer,
                     # 'camera_id': camera_id
                 }))
@@ -304,7 +305,7 @@ async def get_photos(timestamp):
     # random_files = np.random.choice(all_files, size=5, replace=False)
 
     os.makedirs(f'{os.path.join(settings.MEDIA_ROOT, timestamp)}', exist_ok=True)
-    os.system(f'cp /home/sadevans/space/personal/BackWPDD/testfolder/*.jpeg {settings.MEDIA_ROOT}/{timestamp}/')
+    os.system(f'cp {settings.FAKE_DATA_ROOT}/*.jpeg {settings.MEDIA_ROOT}/{timestamp}/')
 
 
 
@@ -312,8 +313,8 @@ async def get_photos(timestamp):
 async def get_one_photo(timestamp):
     print('HERE IS TAKING ONE PHOTO')
     os.makedirs(f'{os.path.join(settings.MEDIA_ROOT, timestamp)}', exist_ok=True)
-    name = os.listdir('/home/sadevans/space/personal/BackWPDD/testfolder/one_photo/')
-    os.system(f'cp /home/sadevans/space/personal/BackWPDD/testfolder/one_photo/*.jpeg {settings.MEDIA_ROOT}/{timestamp}/')
+    name = os.listdir(f'{settings.FAKE_DATA_ROOT}/one_photo/')
+    os.system(f'cp {settings.FAKE_DATA_ROOT}/one_photo/*.jpeg {settings.MEDIA_ROOT}/{timestamp}/')
 
     return name
 
@@ -321,7 +322,7 @@ async def get_one_photo(timestamp):
 async def get_four_photos(timestamp):
     print('HERE IS TAKING FOUR PHOTOs')
     os.makedirs(f'{os.path.join(settings.MEDIA_ROOT, timestamp)}', exist_ok=True)
-    names = os.listdir('/home/sadevans/space/personal/BackWPDD/testfolder/four_photos/')
+    names = os.listdir(f'{settings.FAKE_DATA_ROOT}/four_photos/')
     # name_photo = os.listdir()
-    os.system(f'cp /home/sadevans/space/personal/BackWPDD/testfolder/four_photos/*.jpeg {settings.MEDIA_ROOT}/{timestamp}/')
+    os.system(f'cp {settings.FAKE_DATA_ROOT}/four_photos/*.jpeg {settings.MEDIA_ROOT}/{timestamp}/')
     return names
