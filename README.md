@@ -186,6 +186,7 @@ docker compose up -d
   |   |   |
   |   |   └── css
   |   |       └── start_page.css
+  |   ├── photos
   |   └── manage.py
   |   └── __init__.py
   |
@@ -210,6 +211,7 @@ docker compose up -d
 - `wpdd` - директория, в которой структурирован код сервера.
 - `wpdd/templates` - html шаблоны.
 - `wpdd/static` - js файлы и css файлы.
+- `wpdd/photos` - сюда сохраняются фото с камер и обработанные фото.
 - `wpdd/wpdd/core` - ключевое приложение django, в нем находятся файлы по умолчанию, необходимые для сборки проекта
 - `wpdd/wpdd/core/consumers.py` - взаимодействие сервера с WebSocket-клиентом и веб-страницей
 - `wpdd/manage.py` - ключевой файл запуска сервера.
