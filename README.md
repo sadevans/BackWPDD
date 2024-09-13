@@ -35,6 +35,10 @@ git clone https://github.com/sadevans/BackWPDD.git
 ```shell
 cd BackWPDD
 ```
+Чтобы проиницивализировать сабмодуль модели:
+```
+git submodule update --init --recursive
+```
 
 Для того, чтобы запустить систему, необходимо поднять докер контейнер. Это может занять некоторое время (примерно 10 минут).
 
