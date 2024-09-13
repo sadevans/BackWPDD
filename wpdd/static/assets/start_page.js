@@ -20,7 +20,7 @@ document.getElementById('start-button').addEventListener('click', function() {
     };
 
 
-    chatSocket.onmessage = function(e) {
+    chatSocket.onmessage = async function(e) {
         const data = JSON.parse(e.data);
         
         if (data.message == 'Success'){
@@ -33,8 +33,8 @@ document.getElementById('start-button').addEventListener('click', function() {
             
             clearAllPhotos();
             resetCircles();
-            document.getElementById('pipelineAnswer').style.display = 'none';
-            document.getElementById('pallete_id').innerText = `Pallete ID: ${data.pallete_id}`;
+            // document.getElementById('pipelineAnswer').style.display = 'none';
+            document.getElementById('pallete_id').innerText = `Номер паллеты: ${data.pallete_id}`;
         }
         else if (data.type == 'camera_done'){
             mes = `Camera №${data.camera_id} has taken ${data.num_photos} photo...`;
@@ -43,8 +43,8 @@ document.getElementById('start-button').addEventListener('click', function() {
         }else if (data.type=='pipeline_log'){
             mes = data.message;
             console.log(mes);
-            addPhotosToGrid(data.images, data.photo_id);
-            updateCircleStatus(data.photo_id, data.answer_text);
+            await addPhotosToGrid(data.images, data.photo_id);
+            await updateCircleStatus(data.photo_id, data.answer_text);
 
         }
         else if (data.type == 'pipeline_send_answer'){
@@ -77,13 +77,17 @@ document.getElementById('start-button').addEventListener('click', function() {
     };
 });
 
-let imageWidth;
-function addPhotosToGrid(photoData, photoId) {
+async function addPhotosToGrid(photoData, photoId) {
     const imgElement = document.createElement('img');
-    imgElement.src = `data:image/jpeg;base64,${photoData}`;
+    // imgElement.src = `data:image/jpeg;base64,${photoData}`;
+    const response = await fetch(photoData);
+    const blob = await response.blob()
+
+    imgElement.src = URL.createObjectURL(blob);
+    // imgElement.src = photoData;
+
     
     if (photoId === 1) {
-        imageWidth = imgElement.clientWidth;
         
         const container = document.getElementById('inImageContainer');
         container.innerHTML = ''; 
@@ -110,7 +114,7 @@ function clearAllPhotos() {
 }
 
 
-function updateCircleStatus(photoId, status) {
+async function updateCircleStatus(photoId, status) {
     const circle = document.getElementById(`circle${photoId}`);
     if (circle) {
         if (status === 'OK') {
@@ -128,16 +132,16 @@ function updatePalleteStatus(status) {
     if (statusText) {
         if (status === 'OK') {
             statusText.style.backgroundColor = '#84C950';
-            statusText.innerText = 'OK';  // Use innerText to update the text
+            statusText.innerText = 'Пропуск';  // Use innerText to update the text
         } else if (status === 'Defect') {
             statusText.style.backgroundColor = '#E6341C';
-            statusText.innerText = 'Defect';  // Use innerText to update the text
+            statusText.innerText = 'Дефект';  // Use innerText to update the text
         } else {
-            statusText.style.backgroundColor = '#D0D9D9';
-            statusText.innerText = '';  // Clear the text if no valid status
+            statusText.style.backgroundColor = '#FFBA00';
+            statusText.innerText = 'Осторожно!';  // Clear the text if no valid status
         }
     }
-    statusText.style.display = 'block';  // Ensure the element is visible
+    statusText.style.display = 'flex'; 
 }
 
 
@@ -149,6 +153,7 @@ function resetCircles() {
             circle.style.backgroundColor = '#D0D9D9';
         }
     }
+    document.getElementById('pipelineAnswer').style.display = 'none';
 }
 
 

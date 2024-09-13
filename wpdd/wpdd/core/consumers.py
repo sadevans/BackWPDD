@@ -52,23 +52,9 @@ class ControlConsumer(AsyncWebsocketConsumer):
             )
 
         elif text_data_json['type'] == 'camera':
-        # elif text_data_json['type'] == 'camera1':
             timestamp = text_data_json['pallete_id']
 
-            # if text_data_json['camera_id'] == 1
-
             name = await get_one_photo(timestamp) if text_data_json['camera_id'] == 1 else await get_four_photos(timestamp)
-            # name = await get_one_photo(timestamp) # имитация съемки камеры №1 (дно паллета)
-            # camera_id = 1
-
-        # elif text_data_json['type'] == 'camera2':
-        #     # timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-        #     timestamp = text_data_json['pallete_id']
-        #     name = await get_four_photos(timestamp) # имитация съемки камеры №2 (фото сбоку)
-        #     camera_id = 2
-
-            # Send a message to the 'file_watch_group'
-            # await asyncio.gather(
             await self.channel_layer.group_send(
                 'file_watch_group',
                 {
@@ -80,17 +66,6 @@ class ControlConsumer(AsyncWebsocketConsumer):
                 }
             )
             
-            # await self.channel_layer.group_send(
-            #     'file_watch_group',
-            #     {
-            #         'type': 'models_inference',
-            #         'timestamp': timestamp,
-            #         'name': name,
-            #         'camera_id': text_data_json['camera_id']
-            #     }
-            # )
-            # )
-
     async def new_pallete(self, event):
         pass
 
@@ -203,20 +178,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
             print(i, photo)
             try:
                 photo_path = os.path.join(f"{settings.MEDIA_ROOT}/{timestamp}", photo) # абсолютный путь фотографии, лучше поменять
-                all_photos_abs.append(photo_path) 
 
-                output = self.pipeline.get_prediction(photo_path)
-                print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ", output)
+                if camera_id == 1:
+                    output = self.pipeline.get_prediction(photo_path, side='bottom')
+                else:
+                    output = self.pipeline.get_prediction(photo_path, side='side')
                 answer = int(output['replace_pallet'])
+                # добавить сохранение фото после модели
 
-                # считывание данных для фронта - должны считывать выход модели
-                in_data_bytes = open(photo_path, "rb").read() # читаем фото для фронта
-
-                # кодирование фото для фронта
-                if in_data_bytes:
-                    encoded_photo_in = base64.b64encode(in_data_bytes).decode('ascii')
-                    encoded_photos.append(encoded_photo_in)
-
+                photo_url = f".{settings.MEDIA_URL}{timestamp}/{photo}"
+                
                 # реальный номер фото в зависимости от номера камеры (на камеру1 1ое фото, на камеру2 - фото со 2го по 5ое)
                 if camera_id == 2:
                     num = i+1
@@ -235,9 +206,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'answer': answer,
                     'answer_text': answer_text,
                     'photo_id': i+1 if camera_id==1 else i+2,
-                    'images': [encoded_photo_in]
+                    'images': photo_url
                     # 'camera_id': camera_id
                 }))
+
+                await asyncio.sleep(0.5)
                 # отправка ответа контроллеру
                 if answer == 1:
                     break
@@ -247,9 +220,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'error': str(e)
                 }))
 
-        # if camera_id == 2:
-        #     i = i + 1
-        # answer_text = 'Defect' if answer == 1 else 'OK'
         await self.channel_layer.group_send(
                     'file_watch_group',
                     {
@@ -258,10 +228,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
                         'answer': answer_text,
                         'camera_id': camera_id,
                         'photo_id': num+1,
-                        'encoded_photos': [encoded_photo_in],
+                        'encoded_photos': photo_url,
                         'pallete_id': timestamp
                     }
                 )
+        # await asyncio.sleep(0.5)
+        
 
 
 
@@ -280,38 +252,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 }))
 
 
-
-
-            
-
-
-
-            
-
-
-
-
-async def get_photos(timestamp):
-    print(timestamp)
-    ### IDEALLY
-    # os.exec(f"mkdir {os.environ.get('PHOTO_MAIN_FOLDER')}/{timestamp}")
-    # for i in range(os.environ.get("CAMERA_AMOUNT"))
-        # do photo
-        # save_photo(f"{os.environ.get('PHOTO_MAIN_FOLDER')}/{timestamp}/camera_{i}.jpeg")
-
-    ### DEMO
-    print('HERE')
-    # all_files = [os.path.join(settings.PARENT_ROOT / "testfolder", file) for file in os.listdir(settings.PARENT_ROOT / "testfolder")]
-    # random_files = np.random.choice(all_files, size=5, replace=False)
-
-    os.makedirs(f'{os.path.join(settings.MEDIA_ROOT, timestamp)}', exist_ok=True)
-    os.system(f'cp {settings.FAKE_DATA_ROOT}/*.jpeg {settings.MEDIA_ROOT}/{timestamp}/')
-
-
-
-
 async def get_one_photo(timestamp):
-    print('HERE IS TAKING ONE PHOTO')
     os.makedirs(f'{os.path.join(settings.MEDIA_ROOT, timestamp)}', exist_ok=True)
     name = os.listdir(f'{settings.FAKE_DATA_ROOT}/one_photo/')
     os.system(f'cp {settings.FAKE_DATA_ROOT}/one_photo/*.jpeg {settings.MEDIA_ROOT}/{timestamp}/')
@@ -320,7 +261,6 @@ async def get_one_photo(timestamp):
 
 
 async def get_four_photos(timestamp):
-    print('HERE IS TAKING FOUR PHOTOs')
     os.makedirs(f'{os.path.join(settings.MEDIA_ROOT, timestamp)}', exist_ok=True)
     names = os.listdir(f'{settings.FAKE_DATA_ROOT}/four_photos/')
     # name_photo = os.listdir()

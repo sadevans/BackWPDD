@@ -33,6 +33,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY wpdd /opt/operator-server/wpdd
 
+WORKDIR /opt/operator-server/model
+
+ARG MODELS_PATH=/opt/operator-server/model/model_zoo
+
+RUN python download_models.py
+
 EXPOSE 8000
 
 CMD ["python", "wpdd/manage.py", "runserver", "0.0.0.0:8000"]

@@ -125,7 +125,7 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static'),]
 CORS_ORIGIN_ALLOW_ALL = True # запросы с любых источников
 CORS_ALLOW_CREDENTIALS = True # передача учетных данных вместе с запросами
 
-# REST_FRAMEWORK = {
+# REST_FRAMEWORK = {os.environ.get('PHOTO_MAIN_FOLDER')
 #     'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 #     'DEFAULT_RENDERER_CLASSES': (
 #         'rest_framework.renderers.JSONRenderer',
@@ -134,10 +134,13 @@ CORS_ALLOW_CREDENTIALS = True # передача учетных данных в�
 #     )
 # }
 
-# MEDIA_ROOT = BASE_DIR / "uploads"
 PARENT_ROOT = BASE_DIR.parent
-MEDIA_ROOT = PARENT_ROOT / os.environ.get('PHOTO_MAIN_FOLDER')
-MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / os.environ.get('PHOTO_MAIN_FOLDER')
+print("MEDIA ROOT: ", MEDIA_ROOT)
+
+MEDIA_URL = f"/{os.environ.get('PHOTO_MAIN_FOLDER')}/"
+
+
 
 
 

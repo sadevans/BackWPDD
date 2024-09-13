@@ -24,7 +24,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', views.start_page, name='start_page'),
     # path('chat/', views.chat, name='chat'),
-]
+] +static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # urlpatterns = [
 #     path('', views.home, name='home'),  # Root URL redirecting to chat
