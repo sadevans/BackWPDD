@@ -39,6 +39,10 @@ ARG MODELS_PATH=/opt/operator-server/model/model_zoo
 
 RUN python download_models.py
 
+COPY model/WPDD/download_models.py /opt/operator-server/model/download_models.py
+
 EXPOSE 8000
+
+WORKDIR /opt/operator-server
 
 CMD ["python", "wpdd/manage.py", "runserver", "0.0.0.0:8000"]
