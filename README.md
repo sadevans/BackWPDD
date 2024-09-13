@@ -96,7 +96,7 @@ docker compose up -d
 - [Распознавание дефектов дерева (Large Scale Image Dataset of Wood Surface Defects)](https://www.kaggle.com/datasets/nomihsa965/large-scale-image-dataset-of-wood-surface-defects)
 
 - [Распознавание паллет (pallet detection Computer Vision Project)](https://universe.roboflow.com/sundharesan-kumaresan/pallet-detection-ith6b)
-- [Распознавание паллет (Computer Vision Project)]([https://universe.roboflow.com/sundharesan-kumaresan/pallet-detection-ith6b](https://universe.roboflow.com/palette/x-nbtav))
+- [Распознавание паллет (Computer Vision Project)](https://universe.roboflow.com/palette/x-nbtav)
 - [Самостоятельно собранный датасет + разметка](https://drive.google.com/drive/folders/1Z_Monpry0OlOtElsb2btXsvmj8nBJ3dB)
 
 
