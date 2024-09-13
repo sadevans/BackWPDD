@@ -58,7 +58,7 @@ docker compose up -d
 
 ## Использование
 
-Короткая демонстрация работы системы:
+[Короткая демонстрация работы системы](https://drive.google.com/file/d/1ZA9UE5zi6_PlCiE3s04x5oClytjAvFi7/view?usp=sharing)
 
 
 
